@@ -1,0 +1,33 @@
+# Dockerのバージョン
+version: '3'
+
+services:
+ nuxt:
+   container_name: nuxt_app
+   build: .
+
+   environment:
+      PORT: ${EN_PORT}
+      HOST: ${EN_HOST}
+        # axiosで利用するためAPIのOriginを環境変数として持たせておく
+      BASE_URL: ${BASE_URL}
+   
+   # イメージ名
+   image: nuxt_app_image
+
+   # ホストOSとコンテナ内でソースコードを共有
+   volumes:
+    - ./my_nuxt_app:/app
+   tty: true
+
+   # コンテナ内部の2000を外部から2000でアクセス
+   ports:
+    - ${NUXT_PORT}:2000
+
+   # Laravel側のAPIとの接続ができるようネットワークを設定
+   networks:
+    - sample-spa
+
+networks:
+  sample-spa:
+    external: true
